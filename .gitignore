@@ -1,0 +1,223 @@
+## Ignorar archivos temporales de Visual Studio, resultados de compilación
+## y archivos generados por complementos populares de Visual Studio.
+##
+## Obtén la última versión desde:
+## https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
+
+# Archivos específicos del usuario
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos específicos del usuario (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Archivos generados automáticamente por Mono
+mono_crash.*
+
+# Resultados de compilación
+[Dd]ebug/  # Carpeta de compilación en modo Depuración
+[Dd]ebugPublic/
+[Rr]elease/  # Carpeta de compilación en modo Liberación
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/  # Archivos binarios generados durante la compilación
+[Oo]bj/  # Archivos objeto generados por compiladores
+[Ll]og/  # Archivos de registro
+[Ll]ogs/
+
+# Caché y opciones de Visual Studio 2015/2017
+.vs/
+# Descomenta la siguiente línea si tienes tareas que crean archivos estáticos en wwwroot
+#wwwroot/
+
+# Archivos generados automáticamente por Visual Studio 2017
+Generated\ Files/
+
+# Resultados de pruebas en MSTest
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Archivos de pruebas de NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Resultados de compilación de un proyecto ATL
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# Resultados de benchmarks
+BenchmarkDotNet.Artifacts/
+
+# Archivos específicos de .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Archivos de generación automática en ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Archivos de StyleCop (herramienta de análisis de estilo en C#)
+StyleCopReport.xml
+
+# Archivos generados por Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb  # Archivos de depuración de Visual Studio
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Archivos de pruebas Chutzpah (JavaScript)
+_Chutzpah*
+
+# Caché de Visual C++
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# Archivos de perfilado de Visual Studio
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Archivos de trazas de Visual Studio
+*.e2e
+
+# Archivos de configuración de autenticación en TFS 2012
+$tf/
+
+# Archivos de la herramienta "Guidance Automation Toolkit"
+*.gpState
+
+# Archivos de configuración de ReSharper (plugin para Visual Studio)
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Archivos generados por el sistema de construcción TeamCity
+_TeamCity*
+
+# Archivos de cobertura de código DotCover
+*.dotCover
+
+# Archivos generados por AxoCover (herramienta de cobertura de código)
+.axoCover/*
+!.axoCover/settings.json
+
+# Archivos de cobertura de código Coverlet
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Resultados de cobertura de Visual Studio
+*.coverage
+*.coveragexml
+
+# Archivos de pruebas de NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Archivos de MightyMoose (herramienta de pruebas)
+*.mm.*
+AutoTest.Net/
+
+# Caché de compilación de Sass para Web Workbench
+.sass-cache/
+
+# Archivos generados por InstallShield
+[Ee]xpress/
+
+# Archivos de generación de documentación con DocProject
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+# Archivos de Click-Once (desplegar aplicaciones .NET)
+publish/
+
+# Archivos generados en una publicación Web
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+
+# Archivos de configuración de publicación en Microsoft Azure
+PublishScripts/
+
+# Archivos de paquetes NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Archivos generados en la compilación para Microsoft Azure
+csx/
+*.build.csdef
+
+# Caché del emulador de Microsoft Azure
+ecf/
+rcf/
+
+# Archivos de paquetes para aplicaciones de la Tienda Windows
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+
+# Caché de Visual Studio
+*.[Cc]ache
+!?*.[Cc]ache/
+
+# Ignorar archivos de análisis y hojas de cálculo
+CodigoAnalizar20250604.txt
+ColasDeveloper.xlsx
