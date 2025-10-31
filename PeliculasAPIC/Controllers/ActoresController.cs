@@ -50,7 +50,6 @@ namespace PeliculasAPIC.Controllers
             return dto;
         }
 
-
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] ActorCreacionDTO actorCreacionDTO)
         {

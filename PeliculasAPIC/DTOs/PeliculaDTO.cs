@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PeliculasAPIC.Entidades
+namespace PeliculasAPIC.DTOs
 {
-    public class Pelicula
+    public class PeliculaDTO
     {
         public int Id { get; set; }
         [Required]
@@ -11,11 +11,6 @@ namespace PeliculasAPIC.Entidades
         public bool EnCines { get; set; }
         public DateTime FechaEstreno { get; set; }
         public string Poster { get; set; }
-
-        // Campos de navegación
-        public List<PeliculasActores> PeliculasActores { get; set; }
-        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
-        
 
     }
 }

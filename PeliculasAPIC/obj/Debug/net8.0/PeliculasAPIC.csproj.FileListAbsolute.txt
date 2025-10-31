@@ -175,3 +175,4 @@ C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\
 C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\PeliculasAPIC.pdb
 C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\PeliculasAPIC.genruntimeconfig.cache
 C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\ref\PeliculasAPIC.dll
+C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\PeliculasAPIC.sourcelink.json

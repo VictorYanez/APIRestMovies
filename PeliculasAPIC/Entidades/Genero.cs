@@ -8,6 +8,7 @@ namespace PeliculasAPIC.Entidades
         [Required]
         [StringLength(40)]
         public string Nombre { get; set; }
-        //public List<PeliculasGeneros> PeliculasGeneros { get; set; }
+
+        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
     }
 }

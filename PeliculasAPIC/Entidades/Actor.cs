@@ -10,5 +10,9 @@ namespace PeliculasAPIC.Entidades
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string Foto { get; set; }  //URL de imagen
+
+        // Campos de navegación
+        public List<PeliculasActores> PeliculasActores { get; set; }
+        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
     }
 }
