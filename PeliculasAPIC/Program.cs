@@ -3,8 +3,8 @@ using PeliculasAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+// Add services to the container.
 var startup = new Startup(builder.Configuration);
 
 startup.ConfigureServices(builder.Services);

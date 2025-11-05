@@ -37,6 +37,17 @@ namespace PeliculasAPI
                 sqlOptions => sqlOptions.EnableRetryOnFailure()
                 ));
 
+
+            // ✅ AGREGAR LOGGING AQUÍ (en Startup)
+            services.AddLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+                logging.AddDebug();
+                logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+            });
+
+
             // Registro de controladores (API)
             // Se incluye soporte para JSON automáticamente y Patch
             services.AddControllers()
@@ -56,6 +67,10 @@ namespace PeliculasAPI
         // Se ejecuta en tiempo de ejecución. Define cómo se manejan las solicitudes HTTP.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // ✅ Obtener logger desde los servicios
+            var logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
+            logger.LogInformation("Iniciando configuración de la aplicación");
+
             // Página de errores detallados en desarrollo
             if (env.IsDevelopment())
             {
@@ -79,6 +94,8 @@ namespace PeliculasAPI
             {
                 endpoints.MapControllers();
             });
+
+            logger.LogInformation("Configuración de aplicación completada");
         }
         #endregion
     }

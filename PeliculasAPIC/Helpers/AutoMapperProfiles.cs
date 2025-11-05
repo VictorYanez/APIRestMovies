@@ -18,11 +18,22 @@ namespace PeliculasAPIC.Helpers
             CreateMap<Actor, ActorPatchDTO>().ReverseMap();
 
             CreateMap<Pelicula, PeliculaDTO>().ReverseMap();
+            //CreateMap<PeliculaCreacionDTO, Pelicula>()
+            //    .ForMember(x => x.Poster, options => options.Ignore())
+            //    .ForMember(x => x.PeliculasGeneros, options => options.MapFrom(MapPeliculasGeneros))
+            //    .ForMember(x => x.PeliculasActores, options => options.MapFrom(MapPeliculasActores));
+
+            // ⚠️ TEMPORALMENTE: No mapear relaciones automáticamente
             CreateMap<PeliculaCreacionDTO, Pelicula>()
                 .ForMember(x => x.Poster, options => options.Ignore())
-                .ForMember(x => x.PeliculasGeneros, options => options.MapFrom(MapPeliculasGeneros))
-                .ForMember(x => x.PeliculasActores, options => options.MapFrom(MapPeliculasActores));
-            CreateMap<Pelicula, ActorPatchDTO>().ReverseMap();
+                .ForMember(x => x.PeliculasGeneros, options => options.Ignore())
+                .ForMember(x => x.PeliculasActores, options => options.Ignore())
+                .ForMember(x => x.Id, options => options.Ignore());
+
+            CreateMap<ActorPatchDTO, Pelicula>().ReverseMap();
+
+            CreateMap<ActorPeliculasCreacionDTO, PeliculasActores>();
+
 
         }
 
@@ -54,7 +65,9 @@ namespace PeliculasAPIC.Helpers
 
             foreach (var actor in peliculaCreacionDTO.Actores)
             {
-                resultado.Add(new PeliculasActores() { ActorId = actor.ActorId, Personaje = actor.Personaje });
+                resultado.Add(new PeliculasActores() 
+                {  ActorId = actor.ActorId,
+                   Personaje = actor.Personaje });
             }
 
             return resultado;

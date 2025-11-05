@@ -13,6 +13,6 @@ namespace PeliculasAPIC.Entidades
 
         // Campos de navegación
         public List<PeliculasActores> PeliculasActores { get; set; }
-        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
+
     }
 }
