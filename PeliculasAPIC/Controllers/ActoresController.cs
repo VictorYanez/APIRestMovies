@@ -30,8 +30,10 @@ namespace PeliculasAPIC.Controllers
         //  Listado de todos los actores
         public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
+            // Consulta los actores como IQueryable para paginación -- Solo en esta Entidad se usa paginación
             var queryable = context.Actores.AsQueryable();
-            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable, paginacionDTO.CantidadRegistrosPorPagina);
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable, 
+                paginacionDTO.CantidadRegistrosPorPagina);
             var entidades = await queryable.Paginar(paginacionDTO).ToListAsync();
             var dtos = mapper.Map<List<ActorDTO>>(entidades);
             return dtos;

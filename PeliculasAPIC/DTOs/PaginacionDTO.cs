@@ -5,13 +5,14 @@ namespace PeliculasAPIC.DTOs
     public class PaginacionDTO
     {
         public int Pagina { get; set; } = 1;
-        public int cantidadRegistrosPorPagina = 5;
+        public int cantidadRegistrosPorPagina = 11;
         private readonly int cantidadMaximaRegistrosPorPagina = 50;
         public int CantidadRegistrosPorPagina
         {
                 get => cantidadRegistrosPorPagina;
                 set => cantidadRegistrosPorPagina = 
-                    (value > cantidadMaximaRegistrosPorPagina) ? cantidadMaximaRegistrosPorPagina : value;
+                    (value > cantidadMaximaRegistrosPorPagina) ? 
+                      cantidadMaximaRegistrosPorPagina : value;
         }
 
     }

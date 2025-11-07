@@ -16,6 +16,8 @@ namespace PeliculasAPIC.DTOs
         public bool EnCines { get; set; }
         public DateTime FechaEstreno { get; set; }
 
+
+        // Campos con Herencia 
         [PesoArchivoValidacion(PesoMaximoEnMB: 4)]
         [TipoArchivoValidacion(grupoTipoArchivo: GrupoTipoArchivo.Imagen)]
         public IFormFile Poster { get; set; }
@@ -25,7 +27,6 @@ namespace PeliculasAPIC.DTOs
 
         [ModelBinder(BinderType = typeof(TypeBinder<List<ActorPeliculasCreacionDTO>>))]
         public List<ActorPeliculasCreacionDTO> Actores { get; set; }
-
 
     }
 }

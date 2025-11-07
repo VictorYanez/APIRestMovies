@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PeliculasAPIC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+699f251f8ea38530eed97ecc0ae805d3f3427270")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f25fc686702a118c37f11417cb9f6cc0a3a0fde0")]
 [assembly: System.Reflection.AssemblyProductAttribute("PeliculasAPIC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PeliculasAPIC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PeliculasAPIC.DTOs;
 using PeliculasAPIC.Entidades;
+using PeliculasAPIC.Helpers;
 using PeliculasAPIC.Servicios;
+using System.Linq.Dynamic.Core;
 
 namespace PeliculasAPIC.Controllers
 {
@@ -20,7 +23,7 @@ namespace PeliculasAPIC.Controllers
         private readonly string _contenedor = "Peliculas";
 
         public PeliculasController(
-            ApplicationDbContext context, 
+            ApplicationDbContext context,
             IMapper mapper,
              ILogger<PeliculasController> logger,
             IAlmacenadorArchivos almacenadorArchivos)
@@ -32,23 +35,122 @@ namespace PeliculasAPIC.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PeliculaDTO>>> Get()
+        public async Task<ActionResult<PeliculasIndexDTO>> Get()
         {
-            var peliculas = await context.Peliculas.ToListAsync();
-            var dtos = mapper.Map<List<PeliculaDTO>>(peliculas);
-            return dtos;
+            var top = 5;
+            var hoy = DateTime.Today;
+
+            var proximosEstrenos = await context.Peliculas
+                .Where(x => x.FechaEstreno > hoy)
+                .OrderBy(x => x.FechaEstreno)
+                .Take(top)
+                .ToListAsync();
+
+            var enCines = await context.Peliculas
+                .Where(x => x.EnCines)
+                .Take(top)
+                .ToListAsync();
+
+            var resultado = new PeliculasIndexDTO();
+            resultado.FuturosEstrenos = mapper.Map<List<PeliculaDTO>>(proximosEstrenos);
+            resultado.EnCines = mapper.Map<List<PeliculaDTO>>(enCines);
+            return resultado;
+        }
+
+        [HttpGet("filtro")]
+        public async Task<ActionResult<List<PeliculaDTO>>> Filtrar([FromQuery] FiltroPeliculasDTO filtroPeliculasDTO)
+        {
+            var peliculasQueryable = context.Peliculas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroPeliculasDTO.Titulo))
+            {
+                peliculasQueryable = peliculasQueryable.Where(x => x.Titulo.Contains(filtroPeliculasDTO.Titulo));
+            }
+
+            if (filtroPeliculasDTO.EnCines)
+            {
+                peliculasQueryable = peliculasQueryable.Where(x => x.EnCines);
+            }
+
+            if (filtroPeliculasDTO.ProximosEstrenos)
+            {
+                var hoy = DateTime.Today;
+                peliculasQueryable = peliculasQueryable
+                    .Where(x => x.FechaEstreno > hoy);
+            }
+
+            if (filtroPeliculasDTO.GeneroId != 0)
+            {
+                peliculasQueryable = peliculasQueryable
+                    .Where(x => x.PeliculasGeneros
+                    .Select(y => y.GeneroId)
+                    .Contains(filtroPeliculasDTO.GeneroId));
+            }
+
+            if (!string.IsNullOrEmpty(filtroPeliculasDTO.CampoOrdenar))
+            {
+                // Utilizando System.Linq.Dynamic.Core para ordenamiento dinámico
+                var tipoOrden = filtroPeliculasDTO.OrdenAscendente ? "ascending" : "descending";
+
+                try
+                {
+                    peliculasQueryable = peliculasQueryable.OrderBy($"{filtroPeliculasDTO.CampoOrdenar} {tipoOrden}");
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message, ex);
+                }
+                //{
+                //    if (filtroPeliculasDTO.OrdenAscendente)
+                //    {
+                //        peliculasQueryable = peliculasQueryable.OrderBy(x => x.Titulo);
+                //    }
+                //    else
+                //    {
+                //        peliculasQueryable = peliculasQueryable.OrderByDescending(x => x.Titulo);
+                //    }
+                //}
+                //else if (filtroPeliculasDTO.CampoOrdenar == "fechaestreno")
+                //{
+                //    if (filtroPeliculasDTO.OrdenAscendente)
+                //    {
+                //        peliculasQueryable = peliculasQueryable.OrderBy(x => x.FechaEstreno);
+                //    }
+                //    else
+                //    {
+                //        peliculasQueryable = peliculasQueryable.OrderByDescending(x => x.FechaEstreno);
+                //    }
+                //}
+                //var tipoOrden = filtroPeliculasDTO.OrdenAscendente ? "ascending" : "descending";
+            }
+
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(peliculasQueryable,
+                filtroPeliculasDTO.CantidadRegistrosPorPagina);
+
+            var peliculas = await peliculasQueryable.Paginar(filtroPeliculasDTO.Paginacion).ToListAsync();
+
+            return mapper.Map<List<PeliculaDTO>>(peliculas);
         }
 
         [HttpGet("{id:int}", Name = "obtenerPelicula")]
-        public async Task<ActionResult<PeliculaDTO>> Get(int id)
+        public async Task<ActionResult<PeliculaDetallesDTO>> Get(int id)
         {
-            var pelicula = await context.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
+            var pelicula = await context.Peliculas
+                .Include(x => x.PeliculasActores)
+                .ThenInclude(x => x.Actor)
+                .Include(x => x.PeliculasGeneros)
+                .ThenInclude(x => x.Genero)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (pelicula == null)
             {
                 return NotFound();
             }
 
-            var dto = mapper.Map<PeliculaDTO>(pelicula);
+            pelicula.PeliculasActores = pelicula.PeliculasActores
+                .OrderBy(x => x.Orden).ToList();
+
+            var dto = mapper.Map<PeliculaDetallesDTO>(pelicula);
             return dto;
         }
 
@@ -81,8 +183,10 @@ namespace PeliculasAPIC.Controllers
         }
         private void AsignarOrdenActores(Pelicula pelicula)
         {
+            // El orden de los actores se asigna aquí
             if (pelicula.PeliculasActores != null)
             {
+                // El Orden comienza desde 1
                 for (int i = 0; i < pelicula.PeliculasActores.Count; i++)
                 {
                     // Asegurar que la FK esté establecida
@@ -96,176 +200,37 @@ namespace PeliculasAPIC.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromForm] PeliculaCreacionDTO peliculaCreacionDTO)
         {
-            try
+            var peliculaDB = await context.Peliculas
+                .Include(x => x.PeliculasActores)
+                .Include(x => x.PeliculasGeneros)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (peliculaDB == null) { return NotFound(); }
+
+            peliculaDB = mapper.Map(peliculaCreacionDTO, peliculaDB);
+
+            if (peliculaCreacionDTO.Poster != null)
             {
-                _logger.LogInformation($"🔵 INICIANDO PUT actualización de película ID: {id}");
-
-                // 1. Verificar que la película existe
-                var peliculaExiste = await context.Peliculas
-                    .AsNoTracking()
-                    .AnyAsync(x => x.Id == id);
-
-                if (!peliculaExiste)
+                using (var memoryStream = new MemoryStream())
                 {
-                    _logger.LogWarning($"Película con ID {id} no encontrada");
-                    return NotFound();
+                    await peliculaCreacionDTO.Poster.CopyToAsync(memoryStream);
+                    var contenido = memoryStream.ToArray();
+                    var extension = Path.GetExtension(peliculaCreacionDTO.Poster.FileName);
+                    peliculaDB.Poster = await almacenadorArchivos.EditarArchivo(contenido, extension, _contenedor,
+                        peliculaDB.Poster,
+                        peliculaCreacionDTO.Poster.ContentType);
                 }
-
-                _logger.LogInformation($"Película {id} encontrada, procediendo con actualización");
-
-                // 2. Actualizar propiedades básicas usando enfoque directo
-                var peliculaActual = await context.Peliculas
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == id);
-
-                var peliculaActualizada = new Pelicula
-                {
-                    Id = id,
-                    Titulo = peliculaCreacionDTO.Titulo,
-                    EnCines = peliculaCreacionDTO.EnCines,
-                    FechaEstreno = peliculaCreacionDTO.FechaEstreno,
-                    Poster = peliculaActual.Poster
-                };
-
-                _logger.LogInformation("Propiedades básicas mapeadas");
-
-                // 3. Manejar el poster
-                if (peliculaCreacionDTO.Poster != null)
-                {
-                    _logger.LogInformation("Procesando nuevo poster");
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await peliculaCreacionDTO.Poster.CopyToAsync(memoryStream);
-                        var contenido = memoryStream.ToArray();
-                        var extension = Path.GetExtension(peliculaCreacionDTO.Poster.FileName);
-                        peliculaActualizada.Poster = await almacenadorArchivos.EditarArchivo(
-                            contenido, extension, _contenedor, peliculaActual.Poster,
-                            peliculaCreacionDTO.Poster.ContentType);
-                    }
-                    _logger.LogInformation("Poster actualizado exitosamente");
-                }
-
-                // 4. Actualizar la película primero
-                _logger.LogInformation("Actualizando entidad Película");
-                context.Peliculas.Update(peliculaActualizada);
-                await context.SaveChangesAsync();
-                _logger.LogInformation("Película actualizada en BD");
-
-                // 5. Actualizar relaciones por separado
-                _logger.LogInformation("Iniciando actualización de relaciones");
-                await ActualizarRelacionesPelicula(id, peliculaCreacionDTO);
-                _logger.LogInformation("Todas las relaciones actualizadas exitosamente");
-
-                return NoContent();
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error crítico al actualizar película {id}: {ex.Message}");
-                _logger.LogError($"Stack trace: {ex.StackTrace}");
 
-                if (ex.InnerException != null)
-                {
-                    _logger.LogError($"Inner exception: {ex.InnerException.Message}");
-                }
+            AsignarOrdenActores(peliculaDB);
 
-                return StatusCode(500, $"Error interno detallado: {ex.Message}");
-            }
+            await context.SaveChangesAsync();
+            return NoContent();
         }
 
-        private async Task ActualizarRelacionesPelicula(int peliculaId, PeliculaCreacionDTO peliculaCreacionDTO)
-        {
-            try
-            {
-                _logger.LogInformation($"Eliminando relaciones existentes para película {peliculaId}");
-
-                // Eliminar relaciones existentes
-                var actoresExistentes = await context.PeliculasActores
-                    .Where(pa => pa.PeliculaId == peliculaId)
-                    .ToListAsync();
-
-                var generosExistentes = await context.PeliculasGeneros
-                    .Where(pg => pg.PeliculaId == peliculaId)
-                    .ToListAsync();
-
-                _logger.LogInformation($"Encontrados {actoresExistentes.Count} actores y {generosExistentes.Count} géneros existentes");
-
-                if (actoresExistentes.Any())
-                {
-                    context.PeliculasActores.RemoveRange(actoresExistentes);
-                    await context.SaveChangesAsync();
-                    _logger.LogInformation("Actores existentes eliminados");
-                }
-
-                if (generosExistentes.Any())
-                {
-                    context.PeliculasGeneros.RemoveRange(generosExistentes);
-                    await context.SaveChangesAsync();
-                    _logger.LogInformation("Géneros existentes eliminados");
-                }
-
-                // Agregar nuevos géneros
-                if (peliculaCreacionDTO.GenerosIDs != null && peliculaCreacionDTO.GenerosIDs.Any())
-                {
-                    _logger.LogInformation($"Agregando {peliculaCreacionDTO.GenerosIDs.Count} nuevos géneros");
-
-                    foreach (var generoId in peliculaCreacionDTO.GenerosIDs)
-                    {
-                        // Verificar que el género existe
-                        var generoExiste = await context.Generos.AnyAsync(g => g.Id == generoId);
-                        if (!generoExiste)
-                        {
-                            _logger.LogWarning($"Género con ID {generoId} no existe, omitiendo");
-                            continue;
-                        }
-
-                        context.PeliculasGeneros.Add(new PeliculasGeneros
-                        {
-                            GeneroId = generoId,
-                            PeliculaId = peliculaId
-                        });
-                    }
-                    await context.SaveChangesAsync();
-                    _logger.LogInformation("Géneros agregados exitosamente");
-                }
-
-                // Agregar nuevos actores
-                if (peliculaCreacionDTO.Actores != null && peliculaCreacionDTO.Actores.Any())
-                {
-                    _logger.LogInformation($"Agregando {peliculaCreacionDTO.Actores.Count} nuevos actores");
-
-                    for (int i = 0; i < peliculaCreacionDTO.Actores.Count; i++)
-                    {
-                        var actorDTO = peliculaCreacionDTO.Actores[i];
-
-                        // Verificar que el actor existe
-                        var actorExiste = await context.Actores.AnyAsync(a => a.Id == actorDTO.ActorId);
-                        if (!actorExiste)
-                        {
-                            _logger.LogWarning($"Actor con ID {actorDTO.ActorId} no existe, omitiendo");
-                            continue;
-                        }
-
-                        context.PeliculasActores.Add(new PeliculasActores
-                        {
-                            ActorId = actorDTO.ActorId,
-                            PeliculaId = peliculaId,
-                            Personaje = actorDTO.Personaje ?? "",
-                            Orden = i + 1
-                        });
-                    }
-                    await context.SaveChangesAsync();
-                    _logger.LogInformation("Actores agregados exitosamente");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error en ActualizarRelacionesPelicula: {ex.Message}");
-                throw;
-            }
-        }
 
         [HttpPatch("{id:int}")]
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<PeliculaPatchDTO> patchDocument)

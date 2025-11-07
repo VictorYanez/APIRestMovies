@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using PeliculasAPIC.DTOs;
 using PeliculasAPIC.Entidades;
 
 namespace PeliculasAPIC.Helpers
 {
-    public class AutoMapperProfiles  : Profile
+    public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles()
         {
@@ -30,22 +31,50 @@ namespace PeliculasAPIC.Helpers
                 .ForMember(x => x.PeliculasActores, options => options.Ignore())
                 .ForMember(x => x.Id, options => options.Ignore());
 
-            CreateMap<ActorPatchDTO, Pelicula>().ReverseMap();
+            CreateMap<Pelicula, PeliculaDetallesDTO>()
+                .ForMember(x => x.Generos, options => options.MapFrom(MapPeliculasGeneros))
+                .ForMember(x => x.Actores, options => options.MapFrom(MapPeliculasActores));
 
-            CreateMap<ActorPeliculasCreacionDTO, PeliculasActores>();
+            CreateMap<Pelicula, PeliculaDetallesDTO>()
+                          .ForMember(x => x.Generos, options => options.MapFrom(MapPeliculasGeneros))
+                          .ForMember(x => x.Actores, options => options.MapFrom(MapPeliculasActores));
 
-
+            CreateMap<PeliculaPatchDTO, Pelicula>().ReverseMap();
         }
 
+        private List<ActorPeliculaDetalleDTO> MapPeliculasActores(Pelicula pelicula, PeliculaDetallesDTO peliculaDetallesDTO)
+        {
+            var resultado = new List<ActorPeliculaDetalleDTO>();
+            if (pelicula.PeliculasActores == null) { return resultado; }
+            foreach (var actorPelicula in pelicula.PeliculasActores)
+            {
+                resultado.Add(new ActorPeliculaDetalleDTO
+                {
+                    ActorId = actorPelicula.ActorId,
+                    Personaje = actorPelicula.Personaje,
+                    NombrePersona = actorPelicula.Actor.Nombre
+                });
+            }
 
-        private List<PeliculasGeneros> MapPeliculasGeneros(PeliculaCreacionDTO peliculaCreacionDTO, 
-            Pelicula pelicula)
+            return resultado;
+        }
+
+        private List<GeneroDTO> MapPeliculasGeneros(Pelicula pelicula, PeliculaDetallesDTO peliculaDetallesDTO)
+        {
+            var resultado = new List<GeneroDTO>();
+            if (pelicula.PeliculasGeneros == null) { return resultado; }
+            foreach (var generoPelicula in pelicula.PeliculasGeneros)
+            {
+                resultado.Add(new GeneroDTO() { Id = generoPelicula.GeneroId, Nombre = generoPelicula.Genero.Nombre });
+            }
+
+            return resultado;
+        }
+
+        private List<PeliculasGeneros> MapPeliculasGeneros(PeliculaCreacionDTO peliculaCreacionDTO, Pelicula pelicula)
         {
             var resultado = new List<PeliculasGeneros>();
-            if (peliculaCreacionDTO.GenerosIDs == null) 
-            { 
-                return resultado; 
-            }
+            if (peliculaCreacionDTO.GenerosIDs == null) { return resultado; }
             foreach (var id in peliculaCreacionDTO.GenerosIDs)
             {
                 resultado.Add(new PeliculasGeneros() { GeneroId = id });
@@ -54,23 +83,18 @@ namespace PeliculasAPIC.Helpers
             return resultado;
         }
 
-        private List<PeliculasActores> MapPeliculasActores(PeliculaCreacionDTO peliculaCreacionDTO, 
-            Pelicula pelicula)
+        private List<PeliculasActores> MapPeliculasActores(PeliculaCreacionDTO peliculaCreacionDTO, Pelicula pelicula)
         {
             var resultado = new List<PeliculasActores>();
-            if (peliculaCreacionDTO.Actores == null) 
-            { 
-                return resultado; 
-            }
+            if (peliculaCreacionDTO.Actores == null) { return resultado; }
 
             foreach (var actor in peliculaCreacionDTO.Actores)
             {
-                resultado.Add(new PeliculasActores() 
-                {  ActorId = actor.ActorId,
-                   Personaje = actor.Personaje });
+                resultado.Add(new PeliculasActores() { ActorId = actor.ActorId, Personaje = actor.Personaje });
             }
 
             return resultado;
         }
+     
     }
 }

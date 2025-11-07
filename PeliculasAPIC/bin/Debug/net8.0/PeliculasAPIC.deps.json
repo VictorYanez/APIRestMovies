@@ -14,7 +14,8 @@
           "Microsoft.EntityFrameworkCore.Design": "9.0.10",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.10",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.10",
-          "Swashbuckle.AspNetCore": "6.6.2"
+          "Swashbuckle.AspNetCore": "6.6.2",
+          "System.Linq.Dynamic.Core": "1.6.9"
         },
         "runtime": {
           "PeliculasAPIC.dll": {}
@@ -1003,6 +1004,14 @@
           }
         }
       },
+      "System.Linq.Dynamic.Core/1.6.9": {
+        "runtime": {
+          "lib/net8.0/System.Linq.Dynamic.Core.dll": {
+            "assemblyVersion": "1.6.9.0",
+            "fileVersion": "1.6.9.0"
+          }
+        }
+      },
       "System.Memory/4.5.4": {},
       "System.Memory.Data/1.0.2": {
         "dependencies": {
@@ -1648,6 +1657,13 @@
       "sha512": "sha512-lwI0mhHcCxMtNSxB5ate9Gc9petWovRBUprtjz2yiIDDZPGBIaUiqNzQHJzjPuzTnvNbEMilpAXjDguKsU/2Fg==",
       "path": "system.io.pipelines/9.0.10",
       "hashPath": "system.io.pipelines.9.0.10.nupkg.sha512"
+    },
+    "System.Linq.Dynamic.Core/1.6.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+3M85Vti20gPSo8fObzbmoxbL3bwNwHGl/ViI2FESuVUS+AORy8snrnvDE8jhYbyrTIfs9ge3lj8eOYw9HeY+w==",
+      "path": "system.linq.dynamic.core/1.6.9",
+      "hashPath": "system.linq.dynamic.core.1.6.9.nupkg.sha512"
     },
     "System.Memory/4.5.4": {
       "type": "package",
