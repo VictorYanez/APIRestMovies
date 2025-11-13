@@ -40,6 +40,10 @@ namespace PeliculasAPIC.Helpers
                           .ForMember(x => x.Actores, options => options.MapFrom(MapPeliculasActores));
 
             CreateMap<PeliculaPatchDTO, Pelicula>().ReverseMap();
+
+            // Salas de cine
+            CreateMap<SalaDeCine, SalaDeCineDTO>().ReverseMap();
+            CreateMap<SalaDeCineCreacionDTO, SalaDeCine>();
         }
 
         private List<ActorPeliculaDetalleDTO> MapPeliculasActores(Pelicula pelicula, PeliculaDetallesDTO peliculaDetallesDTO)

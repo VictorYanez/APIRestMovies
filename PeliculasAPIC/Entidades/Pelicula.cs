@@ -2,7 +2,7 @@
 
 namespace PeliculasAPIC.Entidades
 {
-    public class Pelicula
+    public class Pelicula : IId
     {
         public int Id { get; set; }
         [Required]
@@ -15,7 +15,8 @@ namespace PeliculasAPIC.Entidades
         // Campos de navegación
         public List<PeliculasActores> PeliculasActores { get; set; }
         public List<PeliculasGeneros> PeliculasGeneros { get; set; }
-        
+        public List<PeliculasSalasDeCine> PeliculasSalasDeCines { get; set; }
+
 
     }
 }

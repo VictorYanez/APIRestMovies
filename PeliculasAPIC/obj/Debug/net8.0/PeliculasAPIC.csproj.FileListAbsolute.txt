@@ -177,3 +177,7 @@ C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\
 C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\PeliculasAPIC.genruntimeconfig.cache
 C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\ref\PeliculasAPIC.dll
 C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\bin\Debug\net8.0\System.Linq.Dynamic.Core.dll
+C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite.dll
+C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\bin\Debug\net8.0\NetTopologySuite.dll
+C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\bin\Debug\net8.0\NetTopologySuite.IO.SqlServerBytes.dll
+C:\Users\victor.yanez\source\repos\PeliculasAPIC\PeliculasAPIC\obj\Debug\net8.0\EFCoreSqlServerNetTopologySuite.cs

@@ -34,7 +34,9 @@ namespace PeliculasAPI
             // Configuración de EF Core con SQL Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                sqlOptions => sqlOptions.EnableRetryOnFailure()
+                sqlOptions => sqlOptions
+                    .EnableRetryOnFailure()
+                    .UseNetTopologySuite() // 👈 Para datos geoespaciales 
                 ));
 
 

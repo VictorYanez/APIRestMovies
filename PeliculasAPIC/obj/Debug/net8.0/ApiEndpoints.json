@@ -492,5 +492,126 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "Get",
+    "RelativePath": "api/SalasDeCine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[PeliculasAPIC.DTOs.SalaDeCineDTO, PeliculasAPIC, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "Post",
+    "RelativePath": "api/SalasDeCine",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "salaDeCineCreacionDTO",
+        "Type": "PeliculasAPIC.DTOs.SalaDeCineCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "Get",
+    "RelativePath": "api/SalasDeCine/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "PeliculasAPIC.DTOs.SalaDeCineDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "obtenerSalaDeCine"
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "Put",
+    "RelativePath": "api/SalasDeCine/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "salaDeCineCreacionDTO",
+        "Type": "PeliculasAPIC.DTOs.SalaDeCineCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "Delete",
+    "RelativePath": "api/SalasDeCine/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "AgregarPelicula",
+    "RelativePath": "api/SalasDeCine/{id}/AgregarPelicula/{peliculaId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "peliculaId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

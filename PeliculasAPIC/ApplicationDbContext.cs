@@ -40,6 +40,9 @@ namespace PeliculasAPIC
                 .HasForeignKey(pg => pg.PeliculaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<PeliculasSalasDeCine>()
+                .HasKey(ps => new { ps.PeliculaId, ps.SalaDeCineId });
+
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Genero> Generos { get; set; } = default!;
@@ -47,6 +50,9 @@ namespace PeliculasAPIC
         public DbSet<Pelicula> Peliculas { get; set; } = default!;
         public DbSet<PeliculasActores> PeliculasActores { get; set; } = default!;
         public DbSet<PeliculasGeneros> PeliculasGeneros { get; set; } = default!;
+
+        public DbSet<SalaDeCine> SalasDeCine { get; set; } = default!;
+        public DbSet<PeliculasSalasDeCine> PeliculasSalasDeCine { get; set; } = default!;
 
     }
 }
