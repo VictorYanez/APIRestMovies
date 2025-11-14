@@ -613,5 +613,41 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PeliculasAPIC.Controllers.SalasDeCineController",
+    "Method": "Cercanos",
+    "RelativePath": "api/SalasDeCine/Cercanos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Latitud",
+        "Type": "System.Double",
+        "IsRequired": false
+      },
+      {
+        "Name": "Longitud",
+        "Type": "System.Double",
+        "IsRequired": false
+      },
+      {
+        "Name": "DistanciaEnKms",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[PeliculasAPIC.DTOs.SalaDeCineCercanoDTO, PeliculasAPIC, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]
