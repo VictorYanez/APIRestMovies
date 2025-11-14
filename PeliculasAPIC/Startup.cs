@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using PeliculasAPIC;
 using PeliculasAPIC.Helpers;
 using PeliculasAPIC.Servicios;
@@ -30,6 +32,19 @@ namespace PeliculasAPI
             // 🔄 Servicio para Almecenar Archivos Localmente
             services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
             services.AddHttpContextAccessor();
+
+            // 🔄 Servicio para trabajar con Geolocalización
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+
+            // ️️️️ Para usar en AutoMapper al mapear datos geoespaciales
+            services.AddSingleton(provider =>
+
+                new MapperConfiguration(config =>
+                {
+                    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+                }).CreateMapper()
+            );
 
             // Configuración de EF Core con SQL Server
             services.AddDbContext<ApplicationDbContext>(options =>

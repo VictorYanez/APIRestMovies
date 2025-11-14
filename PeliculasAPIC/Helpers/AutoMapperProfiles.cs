@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using PeliculasAPIC.DTOs;
 using PeliculasAPIC.Entidades;
 
@@ -8,7 +10,7 @@ namespace PeliculasAPIC.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
-        public AutoMapperProfiles()
+        public AutoMapperProfiles(GeometryFactory geometryFactory)
         {
             CreateMap<Genero, GeneroDTO>().ReverseMap();
             CreateMap<GeneroCreacionDTO, Genero>();
@@ -41,9 +43,19 @@ namespace PeliculasAPIC.Helpers
 
             CreateMap<PeliculaPatchDTO, Pelicula>().ReverseMap();
 
-            // Salas de cine
-            CreateMap<SalaDeCine, SalaDeCineDTO>().ReverseMap();
-            CreateMap<SalaDeCineCreacionDTO, SalaDeCine>();
+            // Salas de cine y geolocalización
+            CreateMap<SalaDeCine, SalaDeCineDTO>()
+                .ForMember(x => x.Latitud, options => options.MapFrom(y => y.Ubicacion.Y))
+                .ForMember(x => x.Longitud, options => options.MapFrom(y => y.Ubicacion.X));
+
+            CreateMap<SalaDeCineDTO, SalaDeCine>()
+                .ForMember(x => x.Ubicacion, options => options.MapFrom(y =>
+                    geometryFactory.CreatePoint(new Coordinate(y.Longitud, y.Latitud))));
+
+            CreateMap<SalaDeCineCreacionDTO, SalaDeCine>()
+                .ForMember(x => x.Ubicacion, options => options.MapFrom(y =>
+                    geometryFactory.CreatePoint(new Coordinate(y.Longitud, y.Latitud))));
+
         }
 
         private List<ActorPeliculaDetalleDTO> MapPeliculasActores(Pelicula pelicula, PeliculaDetallesDTO peliculaDetallesDTO)
