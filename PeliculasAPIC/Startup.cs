@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using PeliculasAPIC;
 using PeliculasAPIC.Helpers;
 using PeliculasAPIC.Servicios;
+using System.Text;
 
 namespace PeliculasAPI
 {
@@ -70,6 +74,25 @@ namespace PeliculasAPI
             services.AddControllers()
                 .AddNewtonsoftJson();
 
+            // Configuración Identity -usuarios, roles, etc.-
+            services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = false,
+                       ValidateAudience = false,
+                       ValidateLifetime = true,
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+                       ClockSkew = TimeSpan.Zero
+                   }
+               );
+
             // Registro de AutoMapper (usa perfiles definidos en el proyecto)
             //services.AddAutoMapper(typeof(Startup));
 
@@ -103,7 +126,9 @@ namespace PeliculasAPI
             // Enrutamiento
             app.UseRouting();
 
-            // Autenticación y autorización (si se configura)
+            // Autenticación y autorización, Definición de políticas
+            // El orden es importante: primero autenticación, luego autorización
+            // Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22"
             app.UseAuthorization();
 
             // Mapeo de endpoints (controladores)

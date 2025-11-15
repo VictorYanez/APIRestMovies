@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PeliculasAPIC.Entidades;
 
 namespace PeliculasAPIC
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -43,6 +44,7 @@ namespace PeliculasAPIC
             modelBuilder.Entity<PeliculasSalasDeCine>()
                 .HasKey(ps => new { ps.PeliculaId, ps.SalaDeCineId });
 
+            // Al Heredar de IdentityDbContext EF Core registra correctamente las tablas roles claims
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Genero> Generos { get; set; } = default!;
