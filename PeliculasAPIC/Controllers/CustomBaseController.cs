@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PeliculasAPIC.DTOs;
 using PeliculasAPIC.Entidades;
+using PeliculasAPIC.Helpers;
 
 namespace PeliculasAPIC.Controllers
 {
@@ -36,6 +38,29 @@ namespace PeliculasAPIC.Controllers
             var dto = mapper.Map<TDTO>(entidad);
             return dto;
 
+        }
+
+        // ✅ NUEVO MÉTODO - Sobrecarga para PaginacionDTO
+        protected async Task<List<TDTO>> Get<TEntidad, TDTO>(PaginacionDTO paginacionDTO) where TEntidad : class
+        {
+            var queryable = context.Set<TEntidad>().AsNoTracking().AsQueryable();
+            var entidades = await queryable
+                .Skip((paginacionDTO.Pagina - 1) * paginacionDTO.CantidadRegistrosPorPagina)
+                .Take(paginacionDTO.CantidadRegistrosPorPagina)
+                .ToListAsync();
+            var dtos = mapper.Map<List<TDTO>>(entidades);
+            return dtos;
+        }
+
+        // ✅ NUEVO MÉTODO - Sobrecarga para PaginacionDTO
+        protected async Task<List<TDTO>> Get<TEntidad, TDTO>(PaginacionDTO paginacionDTO, 
+            IQueryable<TEntidad> queryable) where TEntidad : class
+        {
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable, 
+                paginacionDTO.CantidadRegistrosPorPagina);
+            var entidades = await queryable.Paginar(paginacionDTO).ToListAsync();
+            var dtos = mapper.Map<List<TDTO>>(entidades);
+            return dtos;
         }
         protected async Task<ActionResult> Post<TCreacion, TEntidad, TLectura>
                (TCreacion creacionDTO, string nombreRuta) where TEntidad : class, IId

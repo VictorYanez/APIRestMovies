@@ -40,6 +40,9 @@ namespace PeliculasAPI
             // 🔄 Servicio para trabajar con Geolocalización
             services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
 
+            // Configuración de Filtro de Película Existe
+            services.AddScoped<PeliculaExisteAttribute>();
+
             // ️️️️ Para usar en AutoMapper al mapear datos geoespaciales
             services.AddSingleton(provider =>
 

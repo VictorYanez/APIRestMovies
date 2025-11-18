@@ -1,0 +1,27 @@
+
+DECLARE @Miubicacion GEOGRAPHY = 'POINT(-89.26737606529011 13.670997419582859)';
+
+SELECT [Id],
+       [Nombre],
+       [Ubicacion].ToString() AS Ubicacion,
+       Ubicacion.STDistance(@Miubicacion) / 1000 AS DistanciaKm
+FROM [PeliculasAPI].[dbo].[SalasDeCine]
+WHERE Ubicacion.STDistance(@Miubicacion) <= 50000  -- 50 km en metros
+ORDER BY DistanciaKm ASC;
+
+//var hash = hasher.HashPassword(null, "VJda1122$");
+AQAAAAIAAYagAAAAEBoWC44Q2r5031a5LXYaoYNidHgLORBnGJhgwfkbR3KQ1B4puRmQ8YFfQiWcs5uHrw==
+
+UPDATE [PeliculasAPI].[dbo].[AspNetUsers]
+SET PasswordHash = 'AQAAAAIAAYagAAAAEBoWC44Q2r5031a5LXYaoYNidHgLORBnGJhgwfkbR3KQ1B4puRmQ8YFfQiWcs5uHrw=='
+WHERE Email = 'vy11@hotmail.com';
+
+INSERT INTO AspNetUserClaims (Id, UserId, ClaimType, ClaimValue)
+VALUES (
+    'a5ba46e8-6d1c-49f9-ab81-3895e1a4677c',
+    'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+    'Admin'
+);
+
+
+

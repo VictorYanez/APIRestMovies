@@ -99,9 +99,9 @@ namespace PeliculasAPIC.Controllers
             var expiracion = DateTime.UtcNow.AddYears(1);
 
             JwtSecurityToken token = new JwtSecurityToken(
-issuer: null,
-audience: null,
-claims: claims,
+                issuer: null,
+                audience: null,
+                claims: claims,
                 expires: expiracion,
                 signingCredentials: creds);
 
@@ -115,12 +115,30 @@ claims: claims,
 
         //[HttpGet("Usuarios")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        //public async Task<ActionResult<List<UsuarioDTO>>> Get([FromQuery] PaginacionDTO paginationDTO)
+        //public async Task<ActionResult<List<UsuarioDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         //{
         //    var queryable = context.Users.AsQueryable();
         //    queryable = queryable.OrderBy(x => x.Email);
-        //    return await Get<IdentityUser, UsuarioDTO>(paginationDTO);
+
+        //    // Aplicar paginación manualmente
+        //    var usuarios = await queryable
+        //        .Skip((paginacionDTO.Pagina - 1) * paginacionDTO.CantidadRegistrosPorPagina)
+        //        .Take(paginacionDTO.CantidadRegistrosPorPagina)
+        //        .ToListAsync();
+
+        //    // Mapear a DTO
+        //    var usuariosDTO = mapper.Map<List<UsuarioDTO>>(usuarios);
+        //    return usuariosDTO;
         //}
+
+        [HttpGet("Usuarios")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult<List<UsuarioDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
+        {
+            var queryable = context.Users.AsQueryable();
+            queryable = queryable.OrderBy(x => x.Email);
+            return await Get<IdentityUser, UsuarioDTO>(paginacionDTO);
+        }
 
         [HttpGet("Roles")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]

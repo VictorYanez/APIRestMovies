@@ -55,6 +55,7 @@ namespace PeliculasAPIC
 
         public DbSet<SalaDeCine> SalasDeCine { get; set; } = default!;
         public DbSet<PeliculasSalasDeCine> PeliculasSalasDeCine { get; set; } = default!;
+        public DbSet<Review> Reviews { get; set; } = default!;
 
     }
 }
